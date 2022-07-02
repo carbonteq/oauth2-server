@@ -4,9 +4,9 @@
   "description": "Manual OAuth 2.0 Server",
   "main": "index.js",
   "scripts": {
-    "test": "",
     "start": "tsnd bin/www.ts",
-    "dev": "tsnd --respawn bin/www.ts"
+    "dev": "tsnd --respawn bin/www.ts",
+    "generateJwksKeys": "tsnd bin/generateKeys.ts"
   },
   "repository": {
     "type": "git",
