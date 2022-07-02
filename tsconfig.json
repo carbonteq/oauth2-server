@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "CommonJS",
+        "moduleResolution": "Node",
+        "lib": ["es2022"],
+        "outDir": "./build/",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,      
+        "noImplicitAny": false,     
+        "preserveConstEnums": true,
+        "removeComments": true,
+        "sourceMap": true,
+        "skipLibCheck": true,
+        "allowJs": true,
+        "esModuleInterop": true       
+    },
+    "include": ["**/*"],
+    "exclude": ["node_modules", "build"]
+}
