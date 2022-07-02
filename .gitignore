@@ -1,0 +1,12 @@
+# Editor
+/.idea
+/.vscode
+
+# Project
+.env
+/build
+/node_modules
+package-lock.json
+
+# Misc
+.nvmrc
