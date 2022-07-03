@@ -1,6 +1,7 @@
 import {Provider} from "oidc-provider";
-import path from "path";
 import fs from "fs";
+
+import TypeORMAdapter from "../../src/Infrastructure/MysqlRepository.ts/TypeORMAdapter";
 
 import Config from "../../src/Infrastructure/Config";
 import Constants from "../../src/Application/Utils/Constants";
@@ -12,6 +13,7 @@ const jwks = JSON.parse(fs.readFileSync(`${STORAGE_PATH.JWKS_KEYS}/jwks.json`, {
 const {server, oauth} = Config;
 
 const configuration = {
+    adapter: TypeORMAdapter,
     clients: [
         {
             client_id: oauth.CLIENT_ID,

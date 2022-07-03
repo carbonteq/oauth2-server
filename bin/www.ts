@@ -5,12 +5,14 @@ dotenv.config();
 
 import "reflect-metadata";
 
+import {dataSource} from "../src/Infrastructure/Database/mysqlConnections";
 import bootstrap from "../http/Server";
-import config from "../src/Infrastructure/Config";
+import Config from "../src/Infrastructure/Config";
 import logger from "../src/Infrastructure/Logger/logger";
 import Constants from "../src/Application/Utils/Constants";
 
-const {server} = config;
+
+const {server} = Config;
 const {STORAGE_PATH} = Constants;
 
 const createStorage = () => {
@@ -25,6 +27,7 @@ const createStorage = () => {
 
 (async () => {
     try {
+        await dataSource.initialize();
         createStorage();
         bootstrap.listen(server.PORT, () => {
             logger.info(
