@@ -1,21 +1,20 @@
 import {dataSource} from "../Database/mysqlConnections";
 
-import Models from "../Database/Models";
+import Models from "../Database/Models/Models";
 import {Repository, ObjectLiteral} from "typeorm";
 import logger from "../Logger/logger";
 
 class TypeORMAdapter {
-    model: any;
-    name: any;
+    model: Repository<ObjectLiteral>;
+    name: string;
     constructor(name) {
-        this.model = dataSource.getRepository(Models[name]);
+        this.model = dataSource.getRepository(name);
         this.name = name;
     }
 
     async upsert(id, data, expiresIn) {
         try {
             const found = await this.model.findOne({where: {id: id}});
-
             if (!found) {
                 await this.model.save({
                     id,
@@ -34,7 +33,7 @@ class TypeORMAdapter {
                         ...(data.grantId ? {grantId: data.grantId} : undefined),
                         ...(data.userCode ? {userCode: data.userCode} : undefined),
                         ...(data.uid ? {uid: data.uid} : undefined),
-                        ...(expiresIn ? {expiresAt: new Date(Date.now() + expiresIn * 1000)} : undefined) as any
+                        ...((expiresIn ? {expiresAt: new Date(Date.now() + expiresIn * 1000)} : undefined) as any)
                     }
                 );
             }
@@ -90,7 +89,7 @@ class TypeORMAdapter {
 
     async destroy(id) {
         try {
-            await this.model.delete({where: {id: id}});
+            await this.model.delete({id: id});
         } catch (e) {
             logger.error(e.message);
         }
@@ -98,7 +97,7 @@ class TypeORMAdapter {
 
     async consume(id) {
         try {
-            await this.model.update({id: id}, {consumedAt: new Date()});
+            await this.model.update({id: id}, {consumedAt: new Date() as any});
         } catch (e) {
             logger.error(e.message);
         }
@@ -106,7 +105,7 @@ class TypeORMAdapter {
 
     async revokeByGrantId(grantId) {
         try {
-            await this.model.delete({where: {grantId: grantId}});
+            await this.model.delete({grantId: grantId});
         } catch (e) {
             logger.error(e.message);
         }
