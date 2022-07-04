@@ -7,6 +7,10 @@
 /build
 /node_modules
 package-lock.json
+storage
+
+# Keys
+jwks.json
 
 # Misc
 .nvmrc
