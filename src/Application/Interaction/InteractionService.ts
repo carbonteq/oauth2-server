@@ -10,11 +10,11 @@ const oidc = app;
 class InteractionService {
     async getUid(request, response) {
         try {
-            const details = await oidc.oidc.interactionDetails(request, response);
+            const details = await app.oidc.interactionDetails(request, response);
             console.log("see what else is available to you for interaction views", details);
 
             const {uid, prompt, params} = details;
-            const client = await oidc.oidc.Client.find(params.client_id as any);
+            const client = await app.oidc.Client.find(params.client_id as any);
 
             return {
                 uid,
@@ -29,8 +29,8 @@ class InteractionService {
 
     async login(request, response) {
         try {
-            const {uid, prompt, params} = await oidc.oidc.interactionDetails(request, response);
-            const client = await oidc.oidc.Client.find(params.client_id as any);
+            const {uid, prompt, params} = await app.oidc.interactionDetails(request, response);
+            const client = await app.oidc.Client.find(params.client_id as any);
 
             const accountId = await UsersRepository.authenticate(request.body.email, request.body.password);
 
@@ -53,7 +53,7 @@ class InteractionService {
                 login: {accountId}
             };
 
-            await oidc.oidc.interactionFinished(request, response, result as any, {mergeWithLastSubmission: false});
+            await app.oidc.interactionFinished(request, response, result as any, {mergeWithLastSubmission: false});
         } catch (e) {
             logger.error(e.message);
         }
@@ -61,7 +61,7 @@ class InteractionService {
 
     async confirm(request, response) {
         try {
-            const interactionDetails = await oidc.oidc.interactionDetails(request, response);
+            const interactionDetails = await app.oidc.interactionDetails(request, response);
             const {
                 prompt: {name, details},
                 params,
@@ -74,10 +74,10 @@ class InteractionService {
 
             if (grantId) {
                 // we'll be modifying existing grant in existing session
-                grant = await oidc.oidc.Grant.find(grantId);
+                grant = await app.oidc.Grant.find(grantId);
             } else {
                 // we're establishing a new grant
-                grant = new oidc.oidc.Grant({
+                grant = new app.oidc.Grant({
                     accountId,
                     clientId: params.client_id as any
                 });
@@ -109,7 +109,7 @@ class InteractionService {
             }
 
             const result = {consent};
-            await oidc.oidc.interactionFinished(request, response, result, {mergeWithLastSubmission: true});
+            await app.oidc.interactionFinished(request, response, result, {mergeWithLastSubmission: true});
         } catch (e) {
             logger.error(e.message);
         }
@@ -121,7 +121,7 @@ class InteractionService {
                 error: "access_denied",
                 error_description: "End-User aborted interaction"
             };
-            await oidc.oidc.interactionFinished(request, response, result, {mergeWithLastSubmission: false});
+            await app.oidc.interactionFinished(request, response, result, {mergeWithLastSubmission: false});
         } catch (e) {
             logger.error(e.message);
         }

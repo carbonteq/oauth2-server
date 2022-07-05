@@ -9,11 +9,11 @@ const Users = new EntitySchema({
             generated: true
         },
         firstName: {
-            type: String, 
+            type: String,
             nullable: false
         },
         lastName: {
-            type: String, 
+            type: String,
             nullable: false
         },
         email: {
@@ -24,6 +24,21 @@ const Users = new EntitySchema({
             type: Boolean,
             nullable: false,
             default: false
+        },
+        createdAt: {
+            type: Date,
+            nullable: false,
+            createDate: true
+        },
+        updatedAt: {
+            type: Date,
+            nullable: false,
+            updateDate: true
+        },
+        deletedAt: {
+            type: Date,
+            nullable: true,
+            deleteDate: true
         }
     }
 });
