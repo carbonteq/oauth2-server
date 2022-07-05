@@ -6,7 +6,7 @@ dotenv.config();
 import "reflect-metadata";
 
 import {dataSource} from "../src/Infrastructure/Database/mysqlConnections";
-import bootstrap from "../http/Server";
+import app from "../http/Server";
 import Config from "../src/Infrastructure/Config";
 import logger from "../src/Infrastructure/Logger/logger";
 import Constants from "../src/Application/Utils/Constants";
@@ -14,6 +14,7 @@ import Constants from "../src/Application/Utils/Constants";
 
 const {server} = Config;
 const {STORAGE_PATH} = Constants;
+const {bootstrap} = app;
 
 const createStorage = () => {
     const dirs = Object.keys(STORAGE_PATH);

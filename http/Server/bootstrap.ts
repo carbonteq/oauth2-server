@@ -1,18 +1,21 @@
-import {Provider} from "oidc-provider";
+import express from "express";
+import cors from "cors";
 import fs from "fs";
+import path from "path";
+import {Provider, Configuration} from "oidc-provider";
 
-import TypeORMAdapter from "../../src/Infrastructure/MysqlRepository.ts/TypeORMAdapter";
+import TypeORMAdapter from "../../src/Infrastructure/MysqlRepository/TypeORMAdapter";
+import UsersRepository from "../../src/Infrastructure/MysqlRepository/UsersRepository";
 
 import Config from "../../src/Infrastructure/Config";
 import Constants from "../../src/Application/Utils/Constants";
 
 const {STORAGE_PATH} = Constants;
+const {server, oauth} = Config;
 
 const jwks = JSON.parse(fs.readFileSync(`${STORAGE_PATH.JWKS_KEYS}/jwks.json`, {encoding: "utf-8"}));
 
-const {server, oauth} = Config;
-
-const configuration = {
+const configuration: Configuration = {
     adapter: TypeORMAdapter,
     clients: [
         {
@@ -26,10 +29,40 @@ const configuration = {
     cookies: {
         keys: oauth.SECURE_KEY.split(" ")
     },
-    jwks
+    jwks,
+    findAccount: UsersRepository.findAccount,
+    claims: {
+        openid: ["sub"],
+        email: ["email", "email_verified"]
+    },
+    interactions: {
+        url(ctx, interaction) {
+            return `/interaction/${interaction.uid}`;
+        }
+    },
+    features: {
+        devInteractions: {enabled: false}
+    }
 };
 
-const app = new Provider(server.APP_URL, configuration as any);
-app.proxy = true;
+const oidc = new Provider(server.APP_URL, configuration);
+oidc.proxy = true;
 
-export default app;
+const bootstrap = express();
+
+bootstrap.set("trust proxy", true);
+bootstrap.set("view engine", "ejs");
+bootstrap.set("views", path.resolve(__dirname, "../../views"));
+
+const limit = {
+    limit: "50mb",
+    extended: true
+};
+
+bootstrap.use(express.json(limit));
+bootstrap.use(express.urlencoded(limit));
+bootstrap.use(cors());
+
+// bootstrap.use(oidc.callback())
+
+export default {bootstrap, oidc};
