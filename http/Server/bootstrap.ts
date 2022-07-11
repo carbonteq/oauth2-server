@@ -63,6 +63,4 @@ bootstrap.use(express.json(limit));
 bootstrap.use(express.urlencoded(limit));
 bootstrap.use(cors());
 
-// bootstrap.use(oidc.callback())
-
 export default {bootstrap, oidc};

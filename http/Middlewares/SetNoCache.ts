@@ -5,4 +5,4 @@ const SetNoCache = (request: e.Request, response: e.Response, next: e.NextFuncti
     next();
 };
 
-export default SetNoCache
+export default SetNoCache;

@@ -4,9 +4,8 @@ const Users = new EntitySchema({
     name: "Users",
     columns: {
         userId: {
-            type: Number,
-            primary: true,
-            generated: true
+            type: String,
+            primary: true
         },
         firstName: {
             type: String,
