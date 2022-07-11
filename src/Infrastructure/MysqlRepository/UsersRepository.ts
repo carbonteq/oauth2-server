@@ -2,7 +2,7 @@ import Users from "../Database/Models/Users";
 import {dataSource} from "../Database/mysqlConnections";
 
 class UsersRepository {
-    static async findAccount(ctx, id) {
+    static async findAccount(ctx, id: string) {
         const usersRepository = dataSource.getRepository(Users);
         // This would ideally be just a check whether the account is still in your storage
         const account = await usersRepository.findOne({where: {userId: id}});
@@ -24,7 +24,7 @@ class UsersRepository {
     }
 
     // This can be anything you need to authenticate a user
-    static async authenticate(email, password) {
+    static async authenticate(email: string, password) {
         try {
             const usersRepository = dataSource.getRepository(Users);
 
