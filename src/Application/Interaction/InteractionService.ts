@@ -4,8 +4,6 @@ import app from "../../../http/Server";
 import logger from "../../Infrastructure/Logger/logger";
 import UsersRepository from "../../Infrastructure/MysqlRepository/UsersRepository";
 
-const oidc = app;
-
 @injectable()
 class InteractionService {
     async getUid(request, response) {
