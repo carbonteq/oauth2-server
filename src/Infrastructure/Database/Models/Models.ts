@@ -33,7 +33,10 @@ const Models = [
             ...(model === "Session" ? {uid: {type: String}} : undefined),
             data: {type: "json", nullable: true},
             expiresAt: {type: Date, nullable: true},
-            consumedAt: {type: Date, nullable: true}
+            consumedAt: {type: Date, nullable: true},
+            createdAt: {type: Date, nullable: false, createDate: true},
+            updatedAt: {type: Date, nullable: false, updateDate: true},
+            deletedAt: {type: Date, nullable: true, deleteDate: true}
         }
     });
 });
