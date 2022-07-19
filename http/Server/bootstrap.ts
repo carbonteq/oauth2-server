@@ -2,7 +2,8 @@ import express from "express";
 import cors from "cors";
 import fs from "fs";
 import path from "path";
-import {Provider, Configuration} from "oidc-provider";
+import {Provider, Configuration, ClientMetadata} from "oidc-provider";
+import morgan from "morgan";
 
 import TypeORMAdapter from "../../src/Infrastructure/MysqlRepository/TypeORMAdapter";
 import UsersRepository from "../../src/Infrastructure/MysqlRepository/UsersRepository";
@@ -10,7 +11,7 @@ import UsersRepository from "../../src/Infrastructure/MysqlRepository/UsersRepos
 import Config from "../../src/Infrastructure/Config";
 import Constants from "../../src/Application/Utils/Constants";
 
-const {STORAGE_PATH} = Constants;
+const {STORAGE_PATH, TEST_PROJECT} = Constants;
 const {server, oauth} = Config;
 
 const jwks = JSON.parse(fs.readFileSync(`${STORAGE_PATH.JWKS_KEYS}/jwks.json`, {encoding: "utf-8"}));
@@ -19,12 +20,12 @@ const configuration: Configuration = {
     adapter: TypeORMAdapter,
     clients: [
         {
-            client_id: oauth.CLIENT_ID,
-            redirect_uris: oauth.REDIRECT_URI.split(" "), // using jwt.io as redirect_uri to show the ID Token contents
+            client_id: oauth.TEST_CLIENT_ID,
+            redirect_uris: oauth.TEST_REDIRECT_URI.split(" "),
             response_types: ["code"],
             grant_types: ["authorization_code"],
-            client_secret: oauth.CLIENT_SECRET,
-            token_endpoint_auth_method: "client_secret_basic"
+            client_secret: oauth.TEST_CLIENT_SECRET,
+            token_endpoint_auth_method: "none"
         }
     ],
     cookies: {
@@ -69,5 +70,7 @@ const limit = {
 bootstrap.use(express.json(limit));
 bootstrap.use(express.urlencoded(limit));
 bootstrap.use(cors());
+
+bootstrap.use(morgan("dev"));
 
 export default {bootstrap, oidc};
