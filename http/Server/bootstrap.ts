@@ -21,9 +21,10 @@ const configuration: Configuration = {
         {
             client_id: oauth.CLIENT_ID,
             redirect_uris: oauth.REDIRECT_URI.split(" "), // using jwt.io as redirect_uri to show the ID Token contents
-            response_types: ["id_token"],
-            grant_types: ["implicit"],
-            token_endpoint_auth_method: "none"
+            response_types: ["code"],
+            grant_types: ["authorization_code"],
+            client_secret: oauth.CLIENT_SECRET,
+            token_endpoint_auth_method: "client_secret_basic"
         }
     ],
     cookies: {
@@ -42,6 +43,12 @@ const configuration: Configuration = {
     },
     features: {
         devInteractions: {enabled: false}
+    },
+    pkce: {
+        required: (ctx, client) => {
+            return true;
+        },
+        methods: ["S256"]
     }
 };
 
