@@ -16,4 +16,5 @@ const dataSourceOptions: DataSourceOptions = {
     synchronize: database.SYNCHRONIZE === "true",
     logging: database.LOGGING === "true"
 };
+
 export const dataSource = new DataSource(dataSourceOptions);

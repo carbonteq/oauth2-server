@@ -6,12 +6,12 @@ import logger from "../Logger/logger";
 class TypeORMAdapter {
     model: Repository<ObjectLiteral>;
     name: string;
-    constructor(name) {
+    constructor(name: string) {
         this.model = dataSource.getRepository(name);
         this.name = name;
     }
 
-    async upsert(id, data, expiresIn) {
+    async upsert(id: string, data: {grantId: string; userCode: string; uid: string}, expiresIn: number): Promise<void> {
         try {
             await this.model.upsert(
                 {
@@ -24,35 +24,12 @@ class TypeORMAdapter {
                 },
                 []
             );
-            // const found = await this.model.findOne({where: {id: id}});
-            // if (!found) {
-            //     await this.model.save({
-            //         id,
-            //         data,
-            //         ...(data.grantId ? {grantId: data.grantId} : undefined),
-            //         ...(data.userCode ? {userCode: data.userCode} : undefined),
-            //         ...(data.uid ? {uid: data.uid} : undefined),
-            //         ...(expiresIn ? {expiresAt: new Date(Date.now() + expiresIn * 1000)} : undefined)
-            //     });
-            // } else {
-            //     await this.model.update(
-            //         {id: id},
-            //         {
-            //             id,
-            //             data,
-            //             ...(data.grantId ? {grantId: data.grantId} : undefined),
-            //             ...(data.userCode ? {userCode: data.userCode} : undefined),
-            //             ...(data.uid ? {uid: data.uid} : undefined),
-            //             ...((expiresIn ? {expiresAt: new Date(Date.now() + expiresIn * 1000)} : undefined)) as any
-            //         }
-            //     );
-            // }
         } catch (e) {
             logger.error(e.message);
         }
     }
 
-    async find(id) {
+    async find(id: string): Promise<any> {
         try {
             const found = await this.model.findOne({where: {id: id}});
             if (!found) {
@@ -67,7 +44,7 @@ class TypeORMAdapter {
         }
     }
 
-    async findByUserCode(userCode) {
+    async findByUserCode(userCode: string): Promise<any> {
         try {
             const found = await this.model.findOne({where: {userCode: userCode}});
             if (!found) {
@@ -82,7 +59,7 @@ class TypeORMAdapter {
         }
     }
 
-    async findByUid(uid) {
+    async findByUid(uid: string): Promise<any> {
         try {
             const found = await this.model.findOne({where: {uid: uid}});
             if (!found) {
@@ -97,7 +74,7 @@ class TypeORMAdapter {
         }
     }
 
-    async destroy(id) {
+    async destroy(id: string): Promise<void> {
         try {
             await this.model.delete({id: id});
         } catch (e) {
@@ -105,7 +82,7 @@ class TypeORMAdapter {
         }
     }
 
-    async consume(id) {
+    async consume(id: string): Promise<void> {
         try {
             await this.model.update({id: id}, {consumedAt: new Date() as any});
         } catch (e) {
@@ -113,7 +90,7 @@ class TypeORMAdapter {
         }
     }
 
-    async revokeByGrantId(grantId) {
+    async revokeByGrantId(grantId: string): Promise<void> {
         try {
             await this.model.delete({grantId: grantId});
         } catch (e) {

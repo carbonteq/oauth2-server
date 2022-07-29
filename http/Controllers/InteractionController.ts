@@ -8,7 +8,7 @@ import InteractionService from "../../src/Application/Interaction/InteractionSer
 const interactionService = container.resolve(InteractionService);
 
 class InteractionController {
-    static async getUid(request: e.Request, response: e.Response) {
+    static async getUid(request: e.Request, response: e.Response): Promise<void> {
         try {
             const httpResponse = await interactionService.getUid(request, response);
             const {uid, prompt, params, client} = httpResponse;
@@ -35,7 +35,7 @@ class InteractionController {
         }
     }
 
-    static async login(request: e.Request, response: e.Response) {
+    static async login(request: e.Request, response: e.Response): Promise<void> {
         try {
             const httpResponse = await interactionService.login(request, response);
             return httpResponse;
@@ -44,7 +44,7 @@ class InteractionController {
         }
     }
 
-    static async confirm(request: e.Request, response: e.Response) {
+    static async confirm(request: e.Request, response: e.Response): Promise<void> {
         try {
             const httpResponse = await interactionService.confirm(request, response);
             return httpResponse;
@@ -53,7 +53,7 @@ class InteractionController {
         }
     }
 
-    static async abort(request: e.Request, response: e.Response) {
+    static async abort(request: e.Request, response: e.Response): Promise<void> {
         try {
             const httpResponse = await interactionService.abort(request, response);
             return httpResponse;

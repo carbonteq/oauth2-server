@@ -1,3 +1,4 @@
+import * as e from "express"
 import {injectable} from "tsyringe";
 import app from "../../../http/Server";
 
@@ -6,7 +7,7 @@ import UsersRepository from "../../Infrastructure/MysqlRepository/UsersRepositor
 
 @injectable()
 class InteractionService {
-    async getUid(request, response) {
+    async getUid(request: e.Request, response: e.Response) {
         try {
             const details = await app.oidc.interactionDetails(request, response);
             console.log("see what else is available to you for interaction views", details);
@@ -25,7 +26,7 @@ class InteractionService {
         }
     }
 
-    async login(request, response) {
+    async login(request: e.Request, response: e.Response): Promise<void> {
         try {
             const {uid, prompt, params} = await app.oidc.interactionDetails(request, response);
             const client = await app.oidc.Client.find(params.client_id as any);
@@ -57,7 +58,7 @@ class InteractionService {
         }
     }
 
-    async confirm(request, response) {
+    async confirm(request: e.Request, response: e.Response): Promise<void> {
         try {
             const interactionDetails = await app.oidc.interactionDetails(request, response);
             const {
@@ -113,7 +114,7 @@ class InteractionService {
         }
     }
 
-    async abort(request, response) {
+    async abort(request: e.Request, response: e.Response): Promise<void> {
         try {
             const result = {
                 error: "access_denied",

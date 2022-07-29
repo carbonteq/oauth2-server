@@ -3,6 +3,7 @@ import cors from "cors";
 import fs from "fs";
 import path from "path";
 import {Provider, Configuration} from "oidc-provider";
+import morgan from "morgan";
 
 import TypeORMAdapter from "../../src/Infrastructure/MysqlRepository/TypeORMAdapter";
 import UsersRepository from "../../src/Infrastructure/MysqlRepository/UsersRepository";
@@ -19,11 +20,12 @@ const configuration: Configuration = {
     adapter: TypeORMAdapter,
     clients: [
         {
-            client_id: oauth.CLIENT_ID,
-            redirect_uris: oauth.REDIRECT_URI.split(" "), // using jwt.io as redirect_uri to show the ID Token contents
-            response_types: ["id_token"],
-            grant_types: ["implicit"],
-            token_endpoint_auth_method: "none"
+            client_id: oauth.TEST_CLIENT_ID,
+            redirect_uris: oauth.TEST_REDIRECT_URI.split(" "),
+            response_types: ["code"],
+            grant_types: ["authorization_code"],
+            client_secret: oauth.TEST_CLIENT_SECRET,
+            token_endpoint_auth_method: "client_secret_basic"
         }
     ],
     cookies: {
@@ -42,6 +44,12 @@ const configuration: Configuration = {
     },
     features: {
         devInteractions: {enabled: false}
+    },
+    pkce: {
+        required: (ctx, client) => {
+            return true;
+        },
+        methods: ["S256"]
     }
 };
 
@@ -62,5 +70,7 @@ const limit = {
 bootstrap.use(express.json(limit));
 bootstrap.use(express.urlencoded(limit));
 bootstrap.use(cors());
+
+bootstrap.use(morgan("dev"));
 
 export default {bootstrap, oidc};
